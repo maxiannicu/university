@@ -31,6 +31,11 @@ namespace Lab_3
             UpdateButtonsStates();
             timer1.Start();
 
+            InitFilters();
+        }
+
+        private void InitFilters()
+        {
             _filters.Add(new SoundFilter
             {
                 Name = "HighpassFilter @4kHz",
@@ -39,7 +44,7 @@ namespace Lab_3
             _filters.Add(new SoundFilter
             {
                 Name = "HighShelfFilter @4kHz",
-                Filter = source => new HighShelfFilter(source.WaveFormat.SampleRate, 4000,10)
+                Filter = source => new HighShelfFilter(source.WaveFormat.SampleRate, 4000, 10)
             });
             _filters.Add(new SoundFilter
             {
@@ -54,7 +59,7 @@ namespace Lab_3
             _filters.Add(new SoundFilter
             {
                 Name = "PeakFilter @2kHz; bandWidth = 15; gain = 10dB",
-                Filter = source => new PeakFilter(source.WaveFormat.SampleRate, 2000,15,10)
+                Filter = source => new PeakFilter(source.WaveFormat.SampleRate, 2000, 15, 10)
             });
             filterList.DataSource = _filters;
             filterList.DisplayMember = "Name";
