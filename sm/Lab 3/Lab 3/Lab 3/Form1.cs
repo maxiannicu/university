@@ -29,9 +29,9 @@ namespace Lab_3
         {
             InitializeComponent();
             UpdateButtonsStates();
-            timer1.Start();
 
             InitFilters();
+            var peakBackgroundImage = (Bitmap) Properties.Resources.ResourceManager.GetObject("meter");
         }
 
         private void InitFilters()
@@ -61,6 +61,7 @@ namespace Lab_3
                 Name = "PeakFilter @2kHz; bandWidth = 15; gain = 10dB",
                 Filter = source => new PeakFilter(source.WaveFormat.SampleRate, 2000, 15, 10)
             });
+
             filterList.DataSource = _filters;
             filterList.DisplayMember = "Name";
         }
@@ -84,6 +85,7 @@ namespace Lab_3
             {
                 var fileName = fileDialog.FileName;
                 _musicPlayer.Open(fileName,new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Render,Role.Multimedia));
+                pitch.Text = string.Format("{0}", _musicPlayer.Pitch);
             }
         }
         
@@ -165,6 +167,20 @@ namespace Lab_3
             {
                 var soundFilter = filterList.SelectedItem as SoundFilter;
                 _musicPlayer.SetFilter(soundFilter.Filter.Invoke(_musicPlayer.Source));
+            }
+        }
+
+        private void pitch_TextChanged(object sender, EventArgs e)
+        {
+            _musicPlayer.Pitch = (float)Convert.ToDouble(pitch.Text);
+        }
+
+        private void peakUpdater_Tick(object sender, EventArgs e)
+        {
+            if (_musicPlayer.Ready)
+            {
+                var musicPlayerPeak = _musicPlayer.Peak;
+                peakBar.Value = Convert.ToInt32(musicPlayerPeak * 100);
             }
         }
     }

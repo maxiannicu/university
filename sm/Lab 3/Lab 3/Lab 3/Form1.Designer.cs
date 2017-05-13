@@ -55,6 +55,10 @@ namespace Lab_3
             this.trackBar9 = new System.Windows.Forms.TrackBar();
             this.trackBar10 = new System.Windows.Forms.TrackBar();
             this.filterList = new System.Windows.Forms.ListBox();
+            this.pitch = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.peakUpdater = new System.Windows.Forms.Timer(this.components);
+            this.peakBar = new Lab_3.PeakBar();
             ((System.ComponentModel.ISupportInitialize)(this.seekBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.volumeTrack)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -73,7 +77,7 @@ namespace Lab_3
             // 
             // seekBar
             // 
-            this.seekBar.Location = new System.Drawing.Point(102, 40);
+            this.seekBar.Location = new System.Drawing.Point(100, 65);
             this.seekBar.Maximum = 100;
             this.seekBar.Name = "seekBar";
             this.seekBar.Size = new System.Drawing.Size(281, 45);
@@ -83,7 +87,7 @@ namespace Lab_3
             // 
             // volumeTrack
             // 
-            this.volumeTrack.Location = new System.Drawing.Point(12, 91);
+            this.volumeTrack.Location = new System.Drawing.Point(10, 116);
             this.volumeTrack.Maximum = 100;
             this.volumeTrack.Name = "volumeTrack";
             this.volumeTrack.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -95,7 +99,7 @@ namespace Lab_3
             // 
             // playButton
             // 
-            this.playButton.Location = new System.Drawing.Point(12, 40);
+            this.playButton.Location = new System.Drawing.Point(10, 65);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(84, 45);
             this.playButton.TabIndex = 4;
@@ -109,7 +113,7 @@ namespace Lab_3
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(481, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(546, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -138,6 +142,7 @@ namespace Lab_3
             // 
             // timer1
             // 
+            this.timer1.Enabled = true;
             this.timer1.Interval = 40;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
@@ -145,7 +150,7 @@ namespace Lab_3
             // 
             this.durationText.AutoSize = true;
             this.durationText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.durationText.Location = new System.Drawing.Point(389, 51);
+            this.durationText.Location = new System.Drawing.Point(387, 76);
             this.durationText.Name = "durationText";
             this.durationText.Size = new System.Drawing.Size(39, 20);
             this.durationText.TabIndex = 8;
@@ -163,7 +168,7 @@ namespace Lab_3
             this.flowLayoutPanel1.Controls.Add(this.trackBar8);
             this.flowLayoutPanel1.Controls.Add(this.trackBar9);
             this.flowLayoutPanel1.Controls.Add(this.trackBar10);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(110, 91);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(108, 116);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(318, 101);
             this.flowLayoutPanel1.TabIndex = 9;
@@ -311,17 +316,57 @@ namespace Lab_3
             // filterList
             // 
             this.filterList.FormattingEnabled = true;
-            this.filterList.Location = new System.Drawing.Point(12, 201);
+            this.filterList.Location = new System.Drawing.Point(306, 237);
             this.filterList.Name = "filterList";
             this.filterList.Size = new System.Drawing.Size(120, 95);
             this.filterList.TabIndex = 10;
             this.filterList.SelectedIndexChanged += new System.EventHandler(this.filterList_SelectedIndexChanged);
             // 
+            // pitch
+            // 
+            this.pitch.Location = new System.Drawing.Point(53, 237);
+            this.pitch.Name = "pitch";
+            this.pitch.Size = new System.Drawing.Size(83, 20);
+            this.pitch.TabIndex = 11;
+            this.pitch.TextChanged += new System.EventHandler(this.pitch_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 237);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Pitch";
+            // 
+            // peakUpdater
+            // 
+            this.peakUpdater.Enabled = true;
+            this.peakUpdater.Interval = 10;
+            this.peakUpdater.Tick += new System.EventHandler(this.peakUpdater_Tick);
+            // 
+            // peakBar
+            // 
+            this.peakBar.AutoScrollMargin = new System.Drawing.Size(0, 0);
+            this.peakBar.AutoScrollMinSize = new System.Drawing.Size(0, 0);
+            this.peakBar.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.peakBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.peakBar.Location = new System.Drawing.Point(10, 27);
+            this.peakBar.Max = 100;
+            this.peakBar.Min = 0;
+            this.peakBar.Name = "peakBar";
+            this.peakBar.Size = new System.Drawing.Size(416, 30);
+            this.peakBar.TabIndex = 13;
+            this.peakBar.Value = 0;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(481, 383);
+            this.ClientSize = new System.Drawing.Size(546, 383);
+            this.Controls.Add(this.peakBar);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.pitch);
             this.Controls.Add(this.filterList);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.durationText);
@@ -376,6 +421,10 @@ namespace Lab_3
         private TrackBar trackBar9;
         private TrackBar trackBar10;
         private ListBox filterList;
+        private TextBox pitch;
+        private Label label1;
+        private Timer peakUpdater;
+        private PeakBar peakBar;
     }
 }
 

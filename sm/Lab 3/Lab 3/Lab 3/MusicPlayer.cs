@@ -9,6 +9,7 @@ using CSCore.Codecs;
 using CSCore.CoreAudioAPI;
 using CSCore.DSP;
 using CSCore.SoundOut;
+using CSCore.Streams;
 using CSCore.Streams.Effects;
 
 namespace Lab_3
@@ -20,6 +21,8 @@ namespace Lab_3
         private BiQuadFilterSource _sampleSource;
 
         private Equalizer _equalizer;
+        private PitchShifter _pitchShifter;
+        private PeakMeter _peakMeter;
 
         public event EventHandler<PlaybackStoppedEventArgs> PlaybackStopped;
 
@@ -81,17 +84,32 @@ namespace Lab_3
 
         public Equalizer Equalizer => _equalizer;
 
+        public float Peak => _peakMeter.PeakValue;
+
+        public float Pitch
+        {
+            get { return _pitchShifter.PitchShiftFactor; }
+            set { _pitchShifter.PitchShiftFactor = value; }
+        }
+
         public void Open(string filename, MMDevice device)
         {
             CleanupPlayback();
+
+            _peakMeter = CodecFactory.Instance.GetCodec(filename)
+                .ToSampleSource()
+                .AppendSource(Equalizer.Create10BandEqualizer, out _equalizer)
+                .ToMono()
+                .AppendSource(src => new PeakMeter(src));
+            _pitchShifter = _peakMeter
+                .AppendSource(src => new PitchShifter(src));
             
-            _sampleSource = CodecFactory.Instance.GetCodec(filename)
-                    .ToSampleSource()
-                    .AppendSource(Equalizer.Create10BandEqualizer, out _equalizer)
+            _sampleSource = _pitchShifter
                     .AppendSource(x => new BiQuadFilterSource(x));
             _soundOut = new WasapiOut() { Latency = 100, Device = device };
             _soundOut.Initialize(_sampleSource.ToWaveSource());
             if (PlaybackStopped != null) _soundOut.Stopped += PlaybackStopped;
+
         }
 
         public void SetFilter(BiQuad filter)
