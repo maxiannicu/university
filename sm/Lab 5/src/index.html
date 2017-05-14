@@ -1,0 +1,134 @@
+<html>
+<head>
+    <title>Image creation</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron row">
+            <div class="col-xs-6">
+                <h3>SVG result</h3>
+                <div id="svg-container"></div>
+            </div>
+            <div class="col-xs-6">
+                <h3>PHP GD result</h3>
+                <img id="phpgd-img" src="generate_image_gd.php"/>
+            </div>
+        </div>
+        <div class="jumbotron row">
+            <a class="btn btn-info" href="#" id="redraw-btn">Redraw</a>
+            <div class="col-xs-12">
+                <H3>Text properties</H3>
+                <div class="input-group">
+                    <span class="input-group-addon" id="text-desc">Text</span>
+                    <input type="text" class="form-control" id="text" aria-describedby="text-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="textSize-desc">Text size</span>
+                    <input type="number" class="form-control" id="textSize" aria-describedby="textSize-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="textColor-desc">Text color (HEX)</span>
+                    <input type="text" class="form-control" id="textColor" aria-describedby="textColor-desc">
+                </div>
+            </div>
+
+            <div class="col-xs-6">
+                <H3>Image properties</H3>
+                <div class="input-group">
+                    <span class="input-group-addon" id="imgWidth-desc">Image width</span>
+                    <input type="number" class="form-control" id="imgWidth" aria-describedby="imgWidth-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="imgHeight-desc">Image height</span>
+                    <input type="number" class="form-control" id="imgHeight" aria-describedby="imgHeight-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="backgroundColor-desc">Background color (HEX)</span>
+                    <input type="text" class="form-control" id="backgroundColor" aria-describedby="backgroundColor-desc">
+                </div>
+            </div>
+            
+            <div class="col-xs-6">
+                <H3>Ellipse properties</H3>
+                <div class="input-group">
+                    <span class="input-group-addon" id="ellipseWidth-desc">Ellipse width</span>
+                    <input type="number" class="form-control" id="ellipseWidth" aria-describedby="ellipseWidth-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="ellipseHeight-desc">Ellipse height</span>
+                    <input type="number" class="form-control" id="ellipseHeight" aria-describedby="ellipseHeight-desc">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="ellipseColor-desc">Ellipse color (HEX)</span>
+                    <input type="text" class="form-control" id="ellipseColor" aria-describedby="ellipseColor-desc">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            function getQueryParam(paramName,inputId){
+                return paramName+"="+$("#"+inputId).val();
+            }
+
+            function getUrlWithData(baseUrl){
+                return baseUrl+"?"
+                    +getQueryParam("text","text")
+                    + "&"
+                    +getQueryParam("textSize","textSize")
+                    + "&"
+                    +getQueryParam("textColor","textColor")
+                    + "&"
+                    +getQueryParam("width","imgWidth")
+                    + "&"
+                    +getQueryParam("height","imgHeight")
+                    + "&"
+                    +getQueryParam("backgroundColor","backgroundColor")
+                    + "&"
+                    +getQueryParam("ellipseWidth","ellipseWidth")
+                    + "&"
+                    +getQueryParam("ellipseHeight","ellipseHeight")
+                    + "&"
+                    +getQueryParam("ellipseColor","ellipseColor");
+            }
+
+            function reloadSvg(){
+                $("#svg-container").text("Loading...");
+                $.ajax({
+                    url: getUrlWithData("generate_image_svg.php"),
+                    success: function( result ) {
+                        
+                        $("#svg-container").html(result);
+                    }
+                });
+            }
+
+
+            function reloadPHPGd(){
+                $("#phpgd-img").prop("src",getUrlWithData("generate_image_gd.php"))
+            }
+
+            reloadSvg();
+            reloadPHPGd();
+
+            $("#redraw-btn").click(function(){
+                reloadSvg();
+                reloadPHPGd();
+            });
+        })
+    </script>
+</body>
+</html>
